@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Carnes La Golosa</title>
+    <!-- Favicon -->
+    <link rel="icon" href="img/golosa-logo-circular-rojo.ico" type="image/x-icon">
+    <!-- Fuentes de Google: Montserrat (Títulos) y Roboto (Texto) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Remix Icon: Iconografía profesional y limpia -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<style>
+    /* --- DISEÑO PREMIUM CATALOG --- */
+    html, body {
+        background-color: var(--bg-cement);
+        cursor: url('img/golosa-logo-circular-rojo.png') 16 16, auto; /* Coordenadas para centrar el cursor */
+    }
+
+    .catalog-header {
+        min-height: 75vh; /* Aumentamos la altura para que la imagen sea el foco principal */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 0;
+        text-align: center;
+        background: url('img/foto3.png') center bottom/cover no-repeat;
+        background-attachment: fixed; /* Efecto parallax para el catálogo gourmet */
+        color: white;
+        overflow: hidden; /* Evita que el texto en movimiento se salga visualmente del contenedor */
+        margin-bottom: 80px;
+        border-bottom: 8px solid var(--primary-color);
+        filter: brightness(1.15); /* Filtro de brillo para resaltar la imagen */
+    }
+
+    .catalog-header h2 {
+        font-size: clamp(2.2rem, 7vw, 4.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background: var(--accent-gold);
+        margin: 1.5rem auto;
+    }
+
+    .catalog-header p {
+        font-size: 1.3rem;
+        max-width: 850px;
+        margin: 0 auto;
+        color: #ecf0f1;
+        font-weight: 300;
+        line-height: 1.6;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    }
+
+    /* Optimización para el efecto parallax avanzado en el texto */
+    .catalog-header h2, .catalog-header .gold-divider, .catalog-header p {
+        will-change: transform;
+    }
+
+    .products-grid {
+        display: grid; /* Usamos grid para un layout de columnas más flexible */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajustado a 300px para evitar desborde en móviles */
+        /* justify-content: center; */ /* No es necesario con grid para centrar los ítems */
+        gap: 2.5rem;
+        padding-bottom: 5rem;
+    }
+
+    .product-card {
+        /* width: 420px; */ /* El ancho de la tarjeta ahora es gestionado por grid-template-columns */
+        max-width: 100%;
+        background: var(--surface-color);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        cursor: pointer;
+        border: none;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.03);
+        /* Estado inicial para la animación de entrada */
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .product-card:hover {
+        transform: translateY(-12px);
+        box-shadow: var(--shadow-premium);
+    }
+
+    .product-image-wrapper {
+        width: 100%; /* Ocupa todo el ancho de la tarjeta */
+        height: 320px; /* Imagen más alta para resaltar el producto */
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: hidden;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .product-card .product-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .product-card:hover img {
+        transform: scale(1.1);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--primary-dark);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        z-index: 2;
+    }
+
+    .product-card-body {
+        padding: 2.2rem; /* Más espacio interno para que el diseño respire */
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .product-card-body h3 {
+        font-size: 1.7rem; /* Títulos más grandes y legibles */
+        font-weight: 800;
+        color: var(--secondary-color);
+        margin-bottom: 0.75rem;
+        transition: color 0.3s ease;
+    }
+
+    .product-card:hover h3 {
+        color: var(--primary-color);
+    }
+
+    .product-short-desc {
+        color: #666; /* Mantenemos el color */
+        font-size: 1.15rem; /* Descripción con mejor tamaño de lectura */
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-presentation {
+        color: var(--accent-gold);
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+    }
+
+    .product-card .btn-view {
+        padding: 10px 20px;
+        border: 2px solid var(--primary-color);
+        background-color: transparent;
+        border-radius: 50px;
+        text-align: center;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .product-card:hover .btn-view {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+    }
+
+    /* Mantiene el logo como cursor sobre elementos interactivos */
+    a, button, .product-card, .btn-view, .modal-close, .js-whatsapp-btn, [onclick], .btn-presentations-toggle, .whatsapp-float-btn, .btn-whatsapp-modal {
+        cursor: url('img/golosa-logo-circular-rojo.png') 16 16, pointer !important;
+    }
+
+    /* --- MODAL DETALLADO MEJORADO --- */
+    .premium-modal {
+        max-width: 1200px !important;
+        width: 100%;
+        padding: 0 !important;
+        display: grid;
+        grid-template-columns: 45% 55%;
+        overflow: hidden;
+        align-items: stretch; /* Asegura que ambas columnas tengan la misma altura */
+        position: relative;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        margin: auto; /* Ayuda a que flexbox lo mantenga centrado dinámicamente */
+    }
+
+    .modal-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        background-color: #fcfcfc; /* Fondo neutro para resaltar el producto */
+        position: relative;
+        border-right: 1px solid #f0f0f0;
+        min-height: 500px;
+    }
+
+    .modal-visual::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('img/golosa-logo-circular-rojo.png') center/50% no-repeat;
+        opacity: 0.05;
+        border-radius: 0;
+        z-index: 1;
+    }
+
+    .modal-visual img {
+        width: 100%;
+        max-width: 440px;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        z-index: 2;
+        position: relative;
+    }
+
+    .modal-content-details {
+        padding: 3rem;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        max-height: 85vh; /* Limita la altura del contenido */
+        overflow-y: auto; /* Permite scroll interno si hay mucho texto */
+        background-color: #ffffff;
+        color: #1a1a1a;
+        position: relative;
+        scrollbar-width: thin;
+    }
+
+    .info-tag {
+        display: inline-block;
+        padding: 8px 16px;
+        background: linear-gradient(45deg, var(--primary-color), #ff6b6b);
+        border: none;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        margin: 0 8px 8px 0;
+        color: #ffffff;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-category-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-tag:hover {
+        transform: translateY(-2px);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: #333;
+        z-index: 10;
+        line-height: 1;
+        background: rgba(255,255,255,0.9);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    /* Mejoras de Jerarquía y Espaciado */
+    .modal-section {
+        margin-bottom: 1.5rem;
+        width: 100%;
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 1.2rem;
+        border-left: 4px solid var(--accent-gold);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideInUp 0.6s ease-out forwards;
+    }
+
+    .modal-section:nth-child(1) { animation-delay: 0.1s; }
+    .modal-section:nth-child(2) { animation-delay: 0.2s; }
+    .modal-section:nth-child(3) { animation-delay: 0.3s; }
+    .modal-section:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes slideInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-section:hover {
+        transform: translateX(5px);
+    }
+
+    .modal-section-title {
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-section-title::before {
+        content: '';
+        width: 20px;
+        height: 3px;
+        background: var(--accent-gold);
+        border-radius: 2px;
+    }
+
+    .modal-product-title {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--secondary-color); /* Color sólido para asegurar visibilidad */
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .modal-description-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #555;
+        font-style: italic;
+    }
+
+    .modal-tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .modal-presentation-wrapper {
+        width: 100%;
+    }
+
+    .modal-presentation-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 10px;
+    }
+
+    .modal-presentation-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .modal-presentation-item:hover {
+        border-color: var(--accent-gold);
+        background: #fff8e1;
+        transform: translateX(5px);
+    }
+
+    .modal-presentation-item i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        min-width: 20px;
+    }
+
+    .modal-ingredients-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #666;
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .modal-logo-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 250px;
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Estilos para el botón de presentaciones */
+    .btn-presentations-toggle {
+        width: 100%;
+        padding: 12px 15px;
+        background: #f1f1f1;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-family-headings);
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--secondary-color);
+        transition: background 0.3s ease;
+    }
+    .btn-presentations-toggle:hover { background: #e5e5e5; }
+    
+    .presentations-content {
+        display: none;
+        margin-top: 10px;
+        padding: 15px;
+        background: #ffffff;
+        border: 1px dashed var(--accent-gold);
+        border-radius: 8px;
+    }
+    .presentations-content.active {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-presentation-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.9rem; }
+    .modal-presentation-item i { color: var(--primary-color); }
+
+    @media (max-width: 850px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding-bottom: 3rem;
+        }
+
+        .catalog-header {
+            min-height: 45vh; /* Altura más reducida en móviles */
+            padding: 80px 0;
+            margin-bottom: 40px;
+            background-attachment: scroll; /* Desactivar parallax para evitar fallas visuales */
+        }
+
+        /* --- MODAL DETALLADO MÓVIL OPTIMIZADO --- */
+        .product-modal {
+            align-items: flex-start; /* Permite desplazar de arriba a abajo si el contenido desborda */
+            padding: 20px 10px;
+        }
+
+        .premium-modal { 
+            grid-template-columns: 1fr; 
+            margin: 0 auto; /* Scroll natural sin centrado vertical rígido */
+            border-radius: 15px;
+            max-height: none; /* Quita límite de altura al contenedor principal */
+        }
+        .modal-visual { 
+            height: 240px; 
+            padding: 1.5rem;
+        }
+        .modal-visual img {
+            width: auto;
+            max-height: 100%;
+        }
+        .modal-content-details { 
+            padding: 1.5rem;
+            border-left: none;
+            border-top: 3px solid var(--accent-gold);
+            max-height: none; /* Remueve scroll interno redundante */
+            overflow-y: visible;
+        }
+        .modal-product-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+        }
+        .modal-section {
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .products-grid {
+            grid-template-columns: 1fr; /* Una columna en celulares */
+            gap: 1.2rem;
+        }
+
+        .product-image-wrapper {
+            height: 230px; /* Tamaño de imagen compacto en celular */
+            padding: 15px;
+        }
+
+        .product-card-body {
+            padding: 1.5rem;
+        }
+
+        .product-card-body h3 {
+            font-size: 1.45rem;
+        }
+
+        .product-short-desc {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-presentation-list {
+            grid-template-columns: 1fr; /* Presentación en columna única en celular */
+        }
+    }
+</style>
+<body>
+    <header>
+        <div class="container navbar">
+            <a href="index.html" class="logo">
+                <img src="img/golosa-logo-circular-rojo.png" alt="Logo Carnes La Golosa">
+            </a>
+            <!-- Mobile Menu Toggle -->
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="productos.html" class="active">Productos</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+            <a href="contacto.html" class="btn btn-primary js-whatsapp-btn">Cotizar</a>
+        </div>
+    </header>
+
+    <section class="catalog-header">
+        <div class="container">
+            <h2>Nuestra Selección</h2>
+            <div class="gold-divider"></div>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <div class="products-grid" id="product-container">
+            <!-- El contenido se generará vía JavaScript para mayor interactividad -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-main">
+            <div class="footer-brand">
+                <img src="img/golosa-logo-circular-rojo.png" alt="Logo Carnes La Golosa">
+                <div>
+                    <span class="brand-name">Carnes La Golosa</span>
+                    <p class="brand-tagline">Carnes de Calidad para tu negocio y tu familia</p>
+                </div>
+            </div>
+
+            <div class="footer-details">
+                <div class="footer-detail-group">
+                    <span class="footer-label">NIT:</span>
+                    <strong>900500007-1</strong>
+                </div>
+
+                <div class="footer-detail-group">
+                    <i class="ri-whatsapp-line" style="color: #25D366;"></i>
+                    <a href="https://wa.me/573123333592?text=Hola%20Carnes%20La%20Golosa%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n" target="_blank" style="color: inherit; text-decoration: none;">
+                        <span>WhatsApp: <strong>+57 312 333 3592</strong></span>
+                    </a>
+                </div>
+
+                <div class="footer-detail-group">
+                    <i class="ri-map-pin-line"></i>
+                    <span>Calle 64 F # 103 - 70, Bogotá</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Carnes La Golosa - Todos los derechos reservados</p>
+            <p>Bogotá, Colombia</p>
+        </div>
+    </footer>
+
+    <div id="product-info-modal" class="product-modal">
+        <div class="modal-container premium-modal">
+            <span class="modal-close" onclick="closeProduct()">&times;</span>
+            <div class="modal-visual"> 
+                <img id="modal-img" src="" alt="">
+            </div>
+            <div class="modal-content-details">
+                <h2 id="modal-title" class="modal-product-title"></h2>
+                
+                <div class="modal-section">
+                    <h5 class="modal-section-title">
+                        <i class="ri-file-text-line"></i>
+                        Descripción
+                    </h5>
+                    <p id="modal-text" class="modal-description-text"></p>
+                </div>
+
+                <div class="modal-section">
+                    <h5 class="modal-section-title">
+                        <i class="ri-archive-line"></i>
+                        Presentación
+                    </h5>
+                    <div id="modal-weight" class="modal-presentation-wrapper"></div>
+                </div>
+
+                <div class="modal-section" style="margin-top: 1.25rem;">
+                    <a id="modal-whatsapp-btn" href="https://wa.me/573123333592?text=Hola%20Carnes%20La%20Golosa%2C%20me%20interesa%20cotizar" target="_blank" class="btn btn-whatsapp-modal">
+                        <i class="ri-whatsapp-line" style="font-size: 1.25rem;"></i> Pedir / Cotizar este producto por WhatsApp
+                    </a>
+                </div>
+
+                <img src="img/golosa-logo-circular-rojo.png" alt="Logo La Golosa" class="modal-logo-watermark">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+    <script>
+        const productos = [
+            {
+                title: 'Hamburguesa de res',
+                img: 'img/FotoComida1.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '40 unidades x 105 gr (Cuadrada y redonda)\n40 unidades x 105 gr (Económica - Cuadrada)\n40 unidades x 125 gr (Cuadrada)\n40 unidades x 85 gr (Cuadrada y redonda)\n20 unidades x 170 gr (Redonda)\n20 unidades x 125 gr (Pura Carne - Redonda)'
+            },
+            {
+                title: 'Hamburguesa de pollo apanada',
+                img: 'img/FotoComida2.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '110 g x Unidad (Redonda)\n140 g x Unidad (Redonda)'
+            },
+            {
+                title: 'Salchicha PerriGolosa',
+                img: 'img/FotoComida3.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '15 unidades x Paquete'
+            },
+            {
+                title: 'Salchicha YumBogolosa',
+                img: 'img/FotoComida4.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '12 unidades x Paquete'
+            },
+            {
+                title: 'Jamón sandwich',
+                img: 'img/FotoComida6.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '500 gr x Unidad'
+            },
+            {
+               title: 'Chorizo',
+img: 'img/FotoComida5.png',
+short: 'Chorizo elaborado con carnes seleccionadas y especias de alta calidad.',
+desc: 'Chorizo elaborado con carnes seleccionadas y especias de alta calidad.',
+weight: '10 unidades (1000 gr) - Chorizo Mixto\n5 unidades (500 gr) - Chorizo de Mi Tierra'
+            },
+            {
+                title: 'Tocineta',
+                img: 'img/FotoComida7.png',
+                short: 'Elaborada con materia cárnica y especias de alta calidad.',
+                desc: 'Elaborada con materia cárnica y especias de alta calidad.',
+                weight: '500 gr (Libra) x Unidad'
+            }
+        ];
+
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            container.innerHTML = productos.map((p, index) => `
+                <div class="product-card" onclick="openProduct(${index})" style="animation-delay: ${index * 0.1}s">
+                    <div class="product-image-wrapper">
+                        <img src="${p.img}" alt="${p.title}">
+                    </div>
+                    <div class="product-card-body">
+                        <div>
+                            <h3>${p.title}</h3>
+                            <p class="product-short-desc">${p.short}</p>
+                        </div>
+                        <div class="btn-view"><i class="ri-eye-line"></i> Ver Detalles</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openProduct(index) {
+            const p = productos[index];
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-img').src = p.img;
+            document.getElementById('modal-text').innerText = p.desc;
+            
+            // Mejorar diagramación de Presentación con iconos y mejor estructura
+            const weightContainer = document.getElementById('modal-weight');
+            if (p.weight.includes('\n')) {
+                const items = p.weight.split('\n');
+                weightContainer.innerHTML = `<div class="modal-presentation-list">
+                    ${items.map((item, index) => {
+                        const parts = item.split(' x ');
+                        const boldPart = parts[0];
+                        const regularPart = parts.slice(1).join(' x ');
+                        return `
+                        <div class="modal-presentation-item" style="animation-delay: ${index * 0.1}s">
+                            <i class="ri-box-3-line"></i>
+                            <div>
+                                <span style="font-weight: 600; color: var(--secondary-color);">${boldPart}</span>
+                                ${regularPart ? `<span style="color: #666; margin-left: 8px;">${regularPart}</span>` : ''}
+                            </div>
+                        </div>
+                    `;}).join('')}
+                </div>`;
+            } else {
+                weightContainer.innerHTML = `<div class="modal-presentation-item">
+                    <i class="ri-box-3-line"></i>
+                    <span>${p.weight}</span>
+                </div>`;
+            }
+            
+            document.getElementById('product-info-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Actualizar botón de cotización por WhatsApp con el producto actual
+            const modalWaBtn = document.getElementById('modal-whatsapp-btn');
+            if (modalWaBtn) {
+                const message = encodeURIComponent(`Hola Carnes La Golosa, me interesa solicitar cotización del producto: ${p.title}`);
+                modalWaBtn.href = `https://wa.me/573123333592?text=${message}`;
+            }
+        }
+
+        function closeProduct() {
+            document.getElementById('product-info-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function togglePresentations() {
+            const content = document.getElementById('presentations-list');
+            const icon = document.querySelector('.btn-presentations-toggle i');
+            content.classList.toggle('active');
+            if (content.classList.contains('active')) {
+                icon.className = 'ri-arrow-up-s-line';
+            } else {
+                icon.className = 'ri-arrow-down-s-line';
+            }
+        }
+
+        window.onload = renderProducts;
+    </script>
+
+    <!-- Botón Flotante de WhatsApp -->
+    <a href="https://wa.me/573123333592?text=Hola%20Carnes%20La%20Golosa%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n%20y%20cotizaci%C3%B3n" class="whatsapp-float-btn" target="_blank" rel="noopener noreferrer" aria-label="Chatear por WhatsApp con Carnes La Golosa">
+        <i class="ri-whatsapp-fill"></i>
+        <span class="whatsapp-float-tooltip">¿Deseas cotizar o tienes dudas? <strong>¡Escríbenos!</strong></span>
+    </a>
+</body>
+</html>
